@@ -2,19 +2,21 @@
 #############################################################
 import numpy as np
 
-cosmo_labels_lcdm_b1=['fiducial', 'h_m', 'h_p', 'ns_m', 'ns_p', 'Ob2_m', 'Ob2_p', 'Om_m', 'Om_p', 's8_m', 's8_p','b1_m','b1_p']
+cosmo_labels=['fiducial', 'h_m', 'h_p', 'ns_m', 'ns_p', 'Ob2_m', 'Ob2_p', 'Om_m', 'Om_p', 's8_m', 's8_p']
 
 """ creates a dictionary for the peak of the PDFs using a CDF cut between 0.03 and 0.9. 'cov' extra cosmo holds the 1000 reals PDFs for the covariance  """
 zlist=[0.0,0.5,1.0]
 Rlistm=[25,30]
 def PeakDict(PDF_dict,PDF_forcov_dict,CosM=False):
     print('Building PDF dictionary')
+    if CosM==True:
+		cosmo_labels.append(['b1_m','b1_p'])
     peak_z={}
     for z in zlist:
         print('z =',z,end=': ')
         peak_cos={}
         chosen_indices={}
-        for cosmo in cosmo_labels_lcdm_b1:
+        for cosmo in cosmo_labels:
             peak_R={}
             if  cosmo=='fiducial':
                 peak_forcov_R={}
