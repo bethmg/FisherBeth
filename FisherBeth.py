@@ -142,22 +142,23 @@ def Param_Covariance(zlist,param_labels,Rlist=None,PDF=None,Pk=None):
 
 """ plots derivs in a bunch of ways """
 #PDF_dict={}
-def DerivPlot(PDF_dict,title,save=(False,None),savetitle=None):
-	
+def DerivPlot(PDF_dict,title):#,save=(False,None),savetitle=None):
+	p_value_min = 0.03
+	p_value_max = 0.9
 	param_labels_lcdm=['Om','s8','Ob2','h','ns']
 	labels={'s8':'$\sigma_8$', 'Om':'$\Omega_m$', 'Ob2':'$\Omega_b$', 'ns':'$n_s$', 'h':'$h$', 'Mnu':r'$M_\nu$'}
 	zlist=[0.0,0.5,1.0]
 	linestylesm=['-','--',':']
 	color_R=cm.tab10(np.linspace(1,0,10))[::-1]
 	Rlistm=[25,30]
-	for Rval in Rlistm:
+	for R in Rlistm:
 		plt.figure()
 		for z_i,z in enumerate(zlist):
 			bins=PDF_dict[z]['bins'][Rval]
 			plt.axhline(y=0,color='black',linestyle='-',linewidth=0.8)
 			for param_i,param in enumerate(param_labels_lcdm):
 				labels_z={0.0:r'$\theta$='+labels[param],0.5:'_nolegend_',1.0:'_nolegend_'}
-				plt.plot(bins,Deriv(param,z,R=Rval),label=labels_z[z],linestyle=linestylesm[z_i],color=color_R[param_i])
+				plt.plot(bins,Deriv(param,z,R,PDF=PDF_dict),label=labels_z[z],linestyle=linestylesm[z_i],color=color_R[param_i])
 			# plt.plot(range(len(halo_PDF_b1deriv[z][R])),halo_PDF_b1deriv[z][R],label=r'CosMomentum, $\theta=b_1$')
 			plt.plot(bins,PDF_dict[z]['fiducial'][R],color='grey',linestyle=linestylesm[z_i],label='$z=$'+str(z)+', fiducial PDF')
 
@@ -167,13 +168,15 @@ def DerivPlot(PDF_dict,title,save=(False,None),savetitle=None):
 		plt.xlim(bins[0],bins[-1])
 		plt.ylim(-0.15,0.20)
 		plt.title(title+r', $R='+str(Rval)+'\mathrm{Mpc}/h$, CDF$\in$['+str(p_value_min)+','+str(p_value_max)+']')   
-		if save==(True,Rval):
-			if savetitle!=None:
-				SaveBethFig('paramderivs_'+savetitle+'_LCDM_R='+str(Rval),talk=True)
-			else:
-				print('Pls add savetitle')
+		#if save==(True,Rval):
+			#if savetitle!=None:
+			#	SaveBethFig('paramderivs_'+savetitle+'_LCDM_R='+str(Rval),talk=True)
+			#else:
+			#	print('Pls add savetitle')
 				
-def DerivPlot_z(PDF_dict,title,save=(False,None),savetitle=None):
+def DerivPlot_z(PDF_dict,title):#,save=(False,None),savetitle=None):
+	p_value_min = 0.03
+	p_value_max = 0.9
 	param_labels_lcdm=['Om','s8','Ob2','h','ns']
 	labels={'s8':'$\sigma_8$', 'Om':'$\Omega_m$', 'Ob2':'$\Omega_b$', 'ns':'$n_s$', 'h':'$h$', 'Mnu':r'$M_\nu$'}
 	zlist=[0.0,0.5,1.0]
@@ -187,7 +190,7 @@ def DerivPlot_z(PDF_dict,title,save=(False,None),savetitle=None):
 			plt.figure()
 			plt.axhline(y=0,color='black',linestyle='-',linewidth=0.8)
 			for param_i,param in enumerate(param_labels_lcdm):
-				plt.plot(bins,Deriv(param,z,R=R),label=r'$\theta$='+labels[param],color=color_R[param_i])
+				plt.plot(bins,Deriv(param,z,R,PDF=PDF_dict),label=r'$\theta$='+labels[param],color=color_R[param_i])
 			# plt.plot(range(len(halo_PDF_b1deriv[z][R])),halo_PDF_b1deriv[z][R],label=r'CosMomentum, $\theta=b_1$')
 			plt.plot(bins,PDF_dict[z]['fiducial'][R],color='grey',linestyle=':',label='$z=$'+str(z)+', fiducial PDF')
 
@@ -197,11 +200,11 @@ def DerivPlot_z(PDF_dict,title,save=(False,None),savetitle=None):
 			plt.xlim(bins[0],bins[-1])
 			# plt.ylim(-0.15,0.20)
 			plt.title(title+r', $z=$'+str(z)+', $R='+str(R)+'\mathrm{Mpc}/h$, CDF$\in$['+str(p_value_min)+','+str(p_value_max)+']')   
-			if save==(True,R):
-				if savetitle!=None:
-					SaveBethFig('paramderivs_'+savetitle+'_LCDM_R='+str(R),paper=True)
-				else:
-					print('Pls add savetitle')                
+			#if save==(True,R):
+				#if savetitle!=None:
+				#	SaveBethFig('paramderivs_'+savetitle+'_LCDM_R='+str(R),paper=True)
+				#else:
+				#	print('Pls add savetitle')                
 
 #Pk_dict={}
 def DerivPlotPk(Pk_dict,zlist):
@@ -214,7 +217,7 @@ def DerivPlotPk(Pk_dict,zlist):
 	for z_i,z in enumerate(zlist):
 		bins=Pk_dict[z]['bins']
 		for param_i,param in enumerate(param_labels_lcdm):
-			deriv=Deriv(param,z,Pk=True)
+			deriv=Deriv(param,z,Pk=Pk_dict)
 			if z_i==0:
 				plt.plot(bins,deriv,label=r'$\theta=$'+labels[param],color=color_R[param_i],linestyle=linestylesm[z_i])
 			else:
